@@ -11,13 +11,14 @@ namespace EveOPreview.View
 		private readonly ApplicationContext _context;
 		private readonly Dictionary<ViewZoomAnchor, RadioButton> _zoomAnchorMap;
 		private ViewZoomAnchor _cachedThumbnailZoomAnchor;
-		private bool _suppressEvents;
+		public bool _suppressEvents;
 		private Size _minimumSize;
 		private Size _maximumSize;
 		#endregion
 
 		public MainForm(ApplicationContext context)
 		{
+			General = new GeneralTab(this);
 			this._context = context;
 			this._zoomAnchorMap = new Dictionary<ViewZoomAnchor, RadioButton>();
 			this._cachedThumbnailZoomAnchor = ViewZoomAnchor.NW;
@@ -27,15 +28,15 @@ namespace EveOPreview.View
 
 			InitializeComponent();
 
-			this.ThumbnailsList.DisplayMember = "Title";
+            this.ThumbnailsList.DisplayMember = "Title";
 
 			this.InitZoomAnchorMap();
 		}
 
 		public bool MinimizeToTray
 		{
-			get => this.MinimizeToTrayCheckBox.Checked;
-			set => this.MinimizeToTrayCheckBox.Checked = value;
+			get => General.MinimizeToTrayCheckBox.Checked;
+			set => General.MinimizeToTrayCheckBox.Checked = value;
 		}
 
 		public double ThumbnailOpacity
@@ -59,38 +60,38 @@ namespace EveOPreview.View
 
 		public bool EnableClientLayoutTracking
 		{
-			get => this.EnableClientLayoutTrackingCheckBox.Checked;
-			set => this.EnableClientLayoutTrackingCheckBox.Checked = value;
+			get => General.EnableClientLayoutTrackingCheckBox.Checked;
+			set => General.EnableClientLayoutTrackingCheckBox.Checked = value;
 		}
 
 		public bool HideActiveClientThumbnail
 		{
-			get => this.HideActiveClientThumbnailCheckBox.Checked;
-			set => this.HideActiveClientThumbnailCheckBox.Checked = value;
+			get => General.HideActiveClientThumbnailCheckBox.Checked;
+			set => General.HideActiveClientThumbnailCheckBox.Checked = value;
 		}
 
 		public bool MinimizeInactiveClients
 		{
-			get => this.MinimizeInactiveClientsCheckBox.Checked;
-			set => this.MinimizeInactiveClientsCheckBox.Checked = value;
+			get => General.MinimizeInactiveClientsCheckBox.Checked;
+			set => General.MinimizeInactiveClientsCheckBox.Checked = value;
 		}
 
 		public bool ShowThumbnailsAlwaysOnTop
 		{
-			get => this.ShowThumbnailsAlwaysOnTopCheckBox.Checked;
-			set => this.ShowThumbnailsAlwaysOnTopCheckBox.Checked = value;
+			get => General.ShowThumbnailsAlwaysOnTopCheckBox.Checked;
+			set => General.ShowThumbnailsAlwaysOnTopCheckBox.Checked = value;
 		}
 
 		public bool HideThumbnailsOnLostFocus
 		{
-			get => this.HideThumbnailsOnLostFocusCheckBox.Checked;
-			set => this.HideThumbnailsOnLostFocusCheckBox.Checked = value;
+			get => General.HideThumbnailsOnLostFocusCheckBox.Checked;
+			set => General.HideThumbnailsOnLostFocusCheckBox.Checked = value;
 		}
 
 		public bool EnablePerClientThumbnailLayouts
 		{
-			get => this.EnablePerClientThumbnailsLayoutsCheckBox.Checked;
-			set => this.EnablePerClientThumbnailsLayoutsCheckBox.Checked = value;
+			get => General.EnablePerClientThumbnailsLayoutsCheckBox.Checked;
+			set => General.EnablePerClientThumbnailsLayoutsCheckBox.Checked = value;
 		}
 
 		public Size ThumbnailSize
@@ -283,18 +284,17 @@ namespace EveOPreview.View
 
 			graphics.DrawString(page.Text, font, textBrush, bounds, stringFlags);
 		}
+        public void OptionChanged_Handler(object sender, EventArgs e)
+        {
+            if (this._suppressEvents)
+            {
+                return;
+            }
 
-		private void OptionChanged_Handler(object sender, EventArgs e)
-		{
-			if (this._suppressEvents)
-			{
-				return;
-			}
+            this.ApplicationSettingsChanged?.Invoke();
+        }
 
-			this.ApplicationSettingsChanged?.Invoke();
-		}
-
-		private void ThumbnailSizeChanged_Handler(object sender, EventArgs e)
+        private void ThumbnailSizeChanged_Handler(object sender, EventArgs e)
 		{
 			if (this._suppressEvents)
 			{
@@ -326,7 +326,7 @@ namespace EveOPreview.View
 				this.ActiveClientHighlightColor = dialog.Color;
 			}
 
-			this.OptionChanged_Handler(sender, e);
+            OptionChanged_Handler(sender, e);
 		}
 
 		private void ThumbnailsList_ItemCheck_Handler(object sender, ItemCheckEventArgs e)
@@ -391,5 +391,7 @@ namespace EveOPreview.View
 			this._zoomAnchorMap[ViewZoomAnchor.S] = this.ZoomAanchorSRadioButton;
 			this._zoomAnchorMap[ViewZoomAnchor.SE] = this.ZoomAanchorSERadioButton;
 		}
+
+		private GeneralTab General;
 	}
 }
