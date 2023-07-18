@@ -18,7 +18,6 @@ namespace EveOPreview.View
 
 		public MainForm(ApplicationContext context)
 		{
-			General = new GeneralTab(this);
 			this._context = context;
 			this._zoomAnchorMap = new Dictionary<ViewZoomAnchor, RadioButton>();
 			this._cachedThumbnailZoomAnchor = ViewZoomAnchor.NW;
@@ -41,7 +40,7 @@ namespace EveOPreview.View
 
 		public double ThumbnailOpacity
 		{
-			get => Math.Min(this.ThumbnailOpacityTrackBar.Value / 100.00, 1.00);
+			get => Math.Min(Thumbnail.ThumbnailOpacityTrackBar.Value / 100.00, 1.00);
 			set
 			{
 				int barValue = (int)(100.0 * value);
@@ -54,7 +53,7 @@ namespace EveOPreview.View
 					barValue = 10;
 				}
 
-				this.ThumbnailOpacityTrackBar.Value = barValue;
+                Thumbnail.ThumbnailOpacityTrackBar.Value = barValue;
 			}
 		}
 
@@ -96,11 +95,11 @@ namespace EveOPreview.View
 
 		public Size ThumbnailSize
 		{
-			get => new Size((int)this.ThumbnailsWidthNumericEdit.Value, (int)this.ThumbnailsHeightNumericEdit.Value);
+			get => new Size((int)Thumbnail.ThumbnailsWidthNumericEdit.Value, (int)Thumbnail.ThumbnailsHeightNumericEdit.Value);
 			set
 			{
-				this.ThumbnailsWidthNumericEdit.Value = value.Width;
-				this.ThumbnailsHeightNumericEdit.Value = value.Height;
+                Thumbnail.ThumbnailsWidthNumericEdit.Value = value.Width;
+                Thumbnail.ThumbnailsHeightNumericEdit.Value = value.Height;
 			}
 		}
 
@@ -294,9 +293,9 @@ namespace EveOPreview.View
             this.ApplicationSettingsChanged?.Invoke();
         }
 
-        private void ThumbnailSizeChanged_Handler(object sender, EventArgs e)
+        public void ThumbnailSizeChanged_Handler(object sender, EventArgs e)
 		{
-			if (this._suppressEvents)
+			if (this._suppressEvents || Thumbnail == null)
 			{
 				return;
 			}
@@ -393,5 +392,6 @@ namespace EveOPreview.View
 		}
 
 		private GeneralTab General;
+		private ThumbnailTab Thumbnail;
 	}
 }

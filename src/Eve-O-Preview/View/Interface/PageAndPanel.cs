@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace EveOPreview.View
 {
@@ -12,10 +11,15 @@ namespace EveOPreview.View
         {
             ParentForm = InParentForm;
 
+            Panel.SuspendLayout();
+            Page.SuspendLayout();
+
             SetPage();
             SetPanel();
 
-            Panel.SuspendLayout();
+            Page.ResumeLayout(false);
+            Panel.ResumeLayout(false);
+            Panel.PerformLayout();
         }
 
         protected void SetPanelSettings(string InName, Point InLocation, Size InSize, int InTabIndex)
@@ -41,42 +45,64 @@ namespace EveOPreview.View
         protected virtual void SetPage() { }
         protected virtual void SetPanel() { }
 
-        public void SetCheckBox(CheckBox InCheckBox, string Name, string Text, Point InLocation, Padding InPadding, Size InSize, int TabIndex, EventHandler Handler)
+        protected void SetCheckBox(CheckBox InCheckBox, string Name, string Text, Point InLocation, Padding InPadding, Size InSize, int TabIndex, EventHandler Handler)
         {
-            SetGeneralControlMembers(InCheckBox, Name, Text, InLocation, InPadding, InSize, TabIndex);
-
             InCheckBox.UseVisualStyleBackColor = true;
             InCheckBox .CheckedChanged += new System.EventHandler(Handler);
+
+            SetGeneralControlMembers(InCheckBox, Name, Text, InLocation, InPadding, InSize, TabIndex);
         }
 
-        public void CreateRadioButton(string Name, string Text, Point InLocation, Padding InPadding, Size InSize, int TabIndex, EventHandler Handler)
+        protected void SetRadioButton(RadioButton InRadioButton, string Name, string Text, Point InLocation, Padding InPadding, Size InSize, int TabIndex, EventHandler Handler)
         {
-            RadioButton NewRadioButton = new RadioButton();
+            InRadioButton.TabStop = true;
+            InRadioButton.UseVisualStyleBackColor = true;
+            InRadioButton.CheckedChanged += new EventHandler(Handler);
 
-            SetGeneralControlMembers(NewRadioButton, Name, Text, InLocation, InPadding, InSize, TabIndex);
-           
-            NewRadioButton.TabStop = true;
-            NewRadioButton.UseVisualStyleBackColor = true;
-            NewRadioButton.CheckedChanged += new System.EventHandler(Handler);
-
+            SetGeneralControlMembers(InRadioButton, Name, Text, InLocation, InPadding, InSize, TabIndex);
         }
 
-        private void SetGeneralControlMembers(Control InControl, string Name, string Text, Point InLocation, Padding InPadding, Size InSize, int TabIndex)
+        protected void SetNumeric(NumericUpDown InNumeric, string InName, decimal InValue, Point InLocation, Size InSize, int InTabIndex)
+        {
+            InNumeric.BackColor = SystemColors.Window;
+            InNumeric.BorderStyle = BorderStyle.FixedSingle;
+            InNumeric.CausesValidation = false;
+            InNumeric.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            InNumeric.Location = InLocation;
+            InNumeric.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            InNumeric.Maximum = new decimal(new int[] {
+            99999999,
+            0,
+            0,
+            0});
+            InNumeric.Name = InName;
+            InNumeric.Size = InSize;
+            InNumeric.TabIndex = InTabIndex;
+            InNumeric.Value = InValue;
+            InNumeric.ValueChanged += new System.EventHandler(ParentForm.ThumbnailSizeChanged_Handler);
+
+            Panel.Controls.Add(InNumeric);
+        }
+
+        protected void SetGeneralControlMembers(Control InControl, string Name, string Text, Point InLocation, Padding InMargin, Size InSize, int TabIndex)
         {
             InControl.Name = Name;
             InControl.Text = Text;
             InControl.AutoSize = true;
-            InControl.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            InControl.Margin = InMargin;
             InControl.Location = InLocation;
             InControl.Size = InSize;
             InControl.TabIndex = TabIndex;
 
-            Controls.Add(InControl);
+            Panel.Controls.Add(InControl);
         }
 
         public TabPage Page = new TabPage();
         public Panel Panel = new Panel();
-        public List<Control> Controls = new List<Control>();
         protected MainForm ParentForm;
     }
 
@@ -114,5 +140,81 @@ namespace EveOPreview.View
         public CheckBox HideThumbnailsOnLostFocusCheckBox = new CheckBox();
         public CheckBox EnablePerClientThumbnailsLayoutsCheckBox = new CheckBox();
         public CheckBox MinimizeToTrayCheckBox = new CheckBox();
+    }
+
+    public class ThumbnailTab : PageAndPanel
+    {
+        public ThumbnailTab(MainForm InParentForm) : base(InParentForm)
+        {
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailsWidthNumericEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailsHeightNumericEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailOpacityTrackBar)).BeginInit();
+
+            Padding LabelPadding = new Padding(4, 0, 4, 0);
+
+            SetGeneralControlMembers(HeightLabel, "HeightLabel", "Thumbnail Height", new Point(12, 88), LabelPadding, new Size(133, 20), 24);
+            SetGeneralControlMembers(WidthLabel, "WidthLabel", "Thumbnail Width", new Point(12, 51), LabelPadding, new Size(127, 20), 23);
+            SetGeneralControlMembers(OpacityLabel, "OpacityLabel", "Opacity", new Point(12, 14), LabelPadding, new Size(62, 20), 19);
+            
+            decimal WidthDecimal = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            SetNumeric(ThumbnailsWidthNumericEdit, "ThumbnailsWidthNumericEdit", WidthDecimal, new Point(158, 48), new Size(72, 26), 21);
+
+            decimal HeightDecimal = new decimal(new int[] {
+            70,
+            0,
+            0,
+            0});
+            SetNumeric(ThumbnailsHeightNumericEdit, "ThumbnailsHeightNumericEdit", HeightDecimal, new Point(158, 85), new Size(72, 26), 22);
+
+            SetTrackBar();
+
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailsWidthNumericEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailsHeightNumericEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ThumbnailOpacityTrackBar)).EndInit();
+        }
+        protected override void SetPage()
+        {
+            SetPageSettings("ThumbnailTabPage", "Thumbnail", new Point(124, 4), new Size(457, 327), 1);
+
+            base.SetPage();
+        }
+
+        protected override void SetPanel()
+        {
+            SetPanelSettings("ThumbnailSettingsPanel", new Point(4, 5), new Size(449, 317), 19);
+
+            base.SetPanel();
+        }
+
+        // Only 1 track bar, so not making helper function cause too many parameters
+        private void SetTrackBar()
+        {
+            ThumbnailOpacityTrackBar.AutoSize = false;
+            ThumbnailOpacityTrackBar.LargeChange = 10;
+            ThumbnailOpacityTrackBar.Location = new Point(92, 9);
+            ThumbnailOpacityTrackBar.Margin = new Padding(4, 5, 4, 5);
+            ThumbnailOpacityTrackBar.Maximum = 100;
+            ThumbnailOpacityTrackBar.Minimum = 20;
+            ThumbnailOpacityTrackBar.Name = "ThumbnailOpacityTrackBar";
+            ThumbnailOpacityTrackBar.Size = new Size(286, 34);
+            ThumbnailOpacityTrackBar.TabIndex = 20;
+            ThumbnailOpacityTrackBar.TickFrequency = 10;
+            ThumbnailOpacityTrackBar.Value = 20;
+            ThumbnailOpacityTrackBar.ValueChanged += new EventHandler(ParentForm.OptionChanged_Handler);
+
+            Panel.Controls.Add(ThumbnailOpacityTrackBar);
+        }
+
+        public Label HeightLabel = new Label();
+        public Label WidthLabel = new Label();
+        public Label OpacityLabel = new Label();
+
+        public NumericUpDown ThumbnailsWidthNumericEdit = new NumericUpDown();
+        public NumericUpDown ThumbnailsHeightNumericEdit = new NumericUpDown();
+        public TrackBar ThumbnailOpacityTrackBar = new TrackBar();
     }
 }

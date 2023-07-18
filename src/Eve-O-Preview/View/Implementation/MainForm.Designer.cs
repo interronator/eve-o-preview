@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace EveOPreview.View
 {
@@ -54,15 +55,11 @@ namespace EveOPreview.View
 			System.Windows.Forms.ToolStripMenuItem TitleMenuItem;
 			System.Windows.Forms.ToolStripSeparator SeparatorMenuItem;
 			System.Windows.Forms.TabControl ContentTabControl;
-			System.Windows.Forms.TabPage GeneralTabPage;
-			System.Windows.Forms.Panel GeneralSettingsPanel;
-			System.Windows.Forms.TabPage ThumbnailTabPage;
-			System.Windows.Forms.Panel ThumbnailSettingsPanel;
             System.Windows.Forms.TabPage LocalWatcherPage;
             System.Windows.Forms.Panel LocalWatcherPanel;
-			System.Windows.Forms.Label HeigthLabel;
-			System.Windows.Forms.Label WidthLabel;
-			System.Windows.Forms.Label OpacityLabel;
+			//
+		
+			//
 			System.Windows.Forms.Panel ZoomSettingsPanel;
 			System.Windows.Forms.Label ZoomFactorLabel;
 			System.Windows.Forms.Label ZoomAnchorLabel;
@@ -77,12 +74,12 @@ namespace EveOPreview.View
 			System.Windows.Forms.Label DescriptionLabel;
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
 			System.Windows.Forms.Label NameLabel;
-			//
-			
-			//
-			this.ThumbnailsWidthNumericEdit = new System.Windows.Forms.NumericUpDown();
-			this.ThumbnailsHeightNumericEdit = new System.Windows.Forms.NumericUpDown();
-			this.ThumbnailOpacityTrackBar = new System.Windows.Forms.TrackBar();
+            //
+
+            //
+            General = new GeneralTab(this);
+			Thumbnail = new ThumbnailTab(this);
+
 			this.ZoomTabPage = new System.Windows.Forms.TabPage();
 			this.ZoomAnchorPanel = new System.Windows.Forms.Panel();
 			this.ZoomAanchorNWRadioButton = new System.Windows.Forms.RadioButton();
@@ -111,15 +108,8 @@ namespace EveOPreview.View
 			TitleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			SeparatorMenuItem = new System.Windows.Forms.ToolStripSeparator();
 			ContentTabControl = new System.Windows.Forms.TabControl();
-			GeneralTabPage = new System.Windows.Forms.TabPage();
-			GeneralSettingsPanel = new System.Windows.Forms.Panel();
 			LocalWatcherPage = new System.Windows.Forms.TabPage();
 			LocalWatcherPanel = new System.Windows.Forms.Panel();
-            ThumbnailTabPage = new System.Windows.Forms.TabPage();
-			ThumbnailSettingsPanel = new System.Windows.Forms.Panel();
-			HeigthLabel = new System.Windows.Forms.Label();
-			WidthLabel = new System.Windows.Forms.Label();
-			OpacityLabel = new System.Windows.Forms.Label();
 			ZoomSettingsPanel = new System.Windows.Forms.Panel();
 			ZoomFactorLabel = new System.Windows.Forms.Label();
 			ZoomAnchorLabel = new System.Windows.Forms.Label();
@@ -134,15 +124,8 @@ namespace EveOPreview.View
 			DescriptionLabel = new System.Windows.Forms.Label();
 			NameLabel = new System.Windows.Forms.Label();
 			ContentTabControl.SuspendLayout();
-			GeneralTabPage.SuspendLayout();
-			GeneralSettingsPanel.SuspendLayout();
-			ThumbnailTabPage.SuspendLayout();
-			ThumbnailSettingsPanel.SuspendLayout();
 			LocalWatcherPage.SuspendLayout();
 			LocalWatcherPanel.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailsWidthNumericEdit)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailsHeightNumericEdit)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailOpacityTrackBar)).BeginInit();
 			this.ZoomTabPage.SuspendLayout();
 			ZoomSettingsPanel.SuspendLayout();
 			this.ZoomAnchorPanel.SuspendLayout();
@@ -185,8 +168,8 @@ namespace EveOPreview.View
 			// ContentTabControl
 			// 
 			ContentTabControl.Alignment = System.Windows.Forms.TabAlignment.Left;
-			ContentTabControl.Controls.Add(GeneralTabPage);
-			ContentTabControl.Controls.Add(ThumbnailTabPage);
+			ContentTabControl.Controls.Add(General.Page);
+			ContentTabControl.Controls.Add(Thumbnail.Page);
 			ContentTabControl.Controls.Add(this.ZoomTabPage);
 			ContentTabControl.Controls.Add(LocalWatcherPage);
 			ContentTabControl.Controls.Add(OverlayTabPage);
@@ -210,130 +193,6 @@ namespace EveOPreview.View
             // 
             General.MinimizeInactiveClientsCheckBox.AutoSize = true;
 
-			// 
-			// ThumbnailTabPage
-			// 
-			ThumbnailTabPage.BackColor = System.Drawing.SystemColors.Control;
-			ThumbnailTabPage.Controls.Add(ThumbnailSettingsPanel);
-			ThumbnailTabPage.Location = new System.Drawing.Point(124, 4);
-			ThumbnailTabPage.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			ThumbnailTabPage.Name = "ThumbnailTabPage";
-			ThumbnailTabPage.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			ThumbnailTabPage.Size = new System.Drawing.Size(457, 327);
-			ThumbnailTabPage.TabIndex = 1;
-			ThumbnailTabPage.Text = "Thumbnail";
-            // 
-            // ThumbnailSettingsPanel
-            // 
-            SetPanelSettings(ref ThumbnailSettingsPanel,
-                new Control[] {
-                HeigthLabel,
-                WidthLabel,
-                ThumbnailsWidthNumericEdit,
-                ThumbnailsHeightNumericEdit,
-                ThumbnailOpacityTrackBar,
-                OpacityLabel},
-                "ThumbnailSettingsPanel",
-                 new System.Drawing.Size(449, 317));
-			// 
-			// HeigthLabel
-			// 
-			HeigthLabel.AutoSize = true;
-			HeigthLabel.Location = new System.Drawing.Point(12, 88);
-			HeigthLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			HeigthLabel.Name = "HeigthLabel";
-			HeigthLabel.Size = new System.Drawing.Size(133, 20);
-			HeigthLabel.TabIndex = 24;
-			HeigthLabel.Text = "Thumbnail Heigth";
-			// 
-			// WidthLabel
-			// 
-			WidthLabel.AutoSize = true;
-			WidthLabel.Location = new System.Drawing.Point(12, 51);
-			WidthLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			WidthLabel.Name = "WidthLabel";
-			WidthLabel.Size = new System.Drawing.Size(127, 20);
-			WidthLabel.TabIndex = 23;
-			WidthLabel.Text = "Thumbnail Width";
-			// 
-			// ThumbnailsWidthNumericEdit
-			// 
-			this.ThumbnailsWidthNumericEdit.BackColor = System.Drawing.SystemColors.Window;
-			this.ThumbnailsWidthNumericEdit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.ThumbnailsWidthNumericEdit.CausesValidation = false;
-			this.ThumbnailsWidthNumericEdit.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.ThumbnailsWidthNumericEdit.Location = new System.Drawing.Point(158, 48);
-			this.ThumbnailsWidthNumericEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			this.ThumbnailsWidthNumericEdit.Maximum = new decimal(new int[] {
-            999999,
-            0,
-            0,
-            0});
-			this.ThumbnailsWidthNumericEdit.Name = "ThumbnailsWidthNumericEdit";
-			this.ThumbnailsWidthNumericEdit.Size = new System.Drawing.Size(72, 26);
-			this.ThumbnailsWidthNumericEdit.TabIndex = 21;
-			this.ThumbnailsWidthNumericEdit.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.ThumbnailsWidthNumericEdit.ValueChanged += new System.EventHandler(this.ThumbnailSizeChanged_Handler);
-			// 
-			// ThumbnailsHeightNumericEdit
-			// 
-			this.ThumbnailsHeightNumericEdit.BackColor = System.Drawing.SystemColors.Window;
-			this.ThumbnailsHeightNumericEdit.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.ThumbnailsHeightNumericEdit.CausesValidation = false;
-			this.ThumbnailsHeightNumericEdit.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-			this.ThumbnailsHeightNumericEdit.Location = new System.Drawing.Point(158, 85);
-			this.ThumbnailsHeightNumericEdit.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			this.ThumbnailsHeightNumericEdit.Maximum = new decimal(new int[] {
-            99999999,
-            0,
-            0,
-            0});
-			this.ThumbnailsHeightNumericEdit.Name = "ThumbnailsHeightNumericEdit";
-			this.ThumbnailsHeightNumericEdit.Size = new System.Drawing.Size(72, 26);
-			this.ThumbnailsHeightNumericEdit.TabIndex = 22;
-			this.ThumbnailsHeightNumericEdit.Value = new decimal(new int[] {
-            70,
-            0,
-            0,
-            0});
-			this.ThumbnailsHeightNumericEdit.ValueChanged += new System.EventHandler(this.ThumbnailSizeChanged_Handler);
-			// 
-			// ThumbnailOpacityTrackBar
-			// 
-			this.ThumbnailOpacityTrackBar.AutoSize = false;
-			this.ThumbnailOpacityTrackBar.LargeChange = 10;
-			this.ThumbnailOpacityTrackBar.Location = new System.Drawing.Point(92, 9);
-			this.ThumbnailOpacityTrackBar.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-			this.ThumbnailOpacityTrackBar.Maximum = 100;
-			this.ThumbnailOpacityTrackBar.Minimum = 20;
-			this.ThumbnailOpacityTrackBar.Name = "ThumbnailOpacityTrackBar";
-			this.ThumbnailOpacityTrackBar.Size = new System.Drawing.Size(286, 34);
-			this.ThumbnailOpacityTrackBar.TabIndex = 20;
-			this.ThumbnailOpacityTrackBar.TickFrequency = 10;
-			this.ThumbnailOpacityTrackBar.Value = 20;
-			this.ThumbnailOpacityTrackBar.ValueChanged += new System.EventHandler(this.OptionChanged_Handler);
-			// 
-			// OpacityLabel
-			// 
-			OpacityLabel.AutoSize = true;
-			OpacityLabel.Location = new System.Drawing.Point(12, 14);
-			OpacityLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			OpacityLabel.Name = "OpacityLabel";
-			OpacityLabel.Size = new System.Drawing.Size(62, 20);
-			OpacityLabel.TabIndex = 19;
-			OpacityLabel.Text = "Opacity";
 			// 
 			// ZoomTabPage
 			// 
@@ -798,15 +657,7 @@ namespace EveOPreview.View
 			this.Load += new System.EventHandler(this.MainFormResize_Handler);
 			this.Resize += new System.EventHandler(this.MainFormResize_Handler);
 			ContentTabControl.ResumeLayout(false);
-			GeneralTabPage.ResumeLayout(false);
-			GeneralSettingsPanel.ResumeLayout(false);
-			GeneralSettingsPanel.PerformLayout();
-			ThumbnailTabPage.ResumeLayout(false);
-			ThumbnailSettingsPanel.ResumeLayout(false);
-			ThumbnailSettingsPanel.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailsWidthNumericEdit)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailsHeightNumericEdit)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.ThumbnailOpacityTrackBar)).EndInit();
+			
 			this.ZoomTabPage.ResumeLayout(false);
 			ZoomSettingsPanel.ResumeLayout(false);
 			ZoomSettingsPanel.PerformLayout();
@@ -841,9 +692,7 @@ namespace EveOPreview.View
         private NotifyIcon NotifyIcon;
 		private ContextMenuStrip TrayMenu;
 		private TabPage ZoomTabPage;
-		private NumericUpDown ThumbnailsWidthNumericEdit;
-		private NumericUpDown ThumbnailsHeightNumericEdit;
-		private TrackBar ThumbnailOpacityTrackBar;
+
 		private Panel ZoomAnchorPanel;
 		private RadioButton ZoomAanchorNWRadioButton;
 		private RadioButton ZoomAanchorNRadioButton;
