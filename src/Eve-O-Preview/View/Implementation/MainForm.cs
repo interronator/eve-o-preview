@@ -105,18 +105,18 @@ namespace EveOPreview.View
 
 		public bool EnableThumbnailZoom
 		{
-			get => this.EnableThumbnailZoomCheckBox.Checked;
+			get => Zoom.EnableThumbnailZoomCheckBox.Checked;
 			set
 			{
-				this.EnableThumbnailZoomCheckBox.Checked = value;
+                Zoom.EnableThumbnailZoomCheckBox.Checked = value;
 				this.RefreshZoomSettings();
 			}
 		}
 
 		public int ThumbnailZoomFactor
 		{
-			get => (int)this.ThumbnailZoomFactorNumericEdit.Value;
-			set => this.ThumbnailZoomFactorNumericEdit.Value = value;
+			get => (int)Zoom.ThumbnailZoomFactorNumericEdit.Value;
+			set => Zoom.ThumbnailZoomFactorNumericEdit.Value = value;
 		}
 
 		public ViewZoomAnchor ThumbnailZoomAnchor
@@ -151,20 +151,20 @@ namespace EveOPreview.View
 
 		public bool ShowThumbnailOverlays
 		{
-			get => this.ShowThumbnailOverlaysCheckBox.Checked;
-			set => this.ShowThumbnailOverlaysCheckBox.Checked = value;
+			get => Overlay.ShowThumbnailOverlaysCheckBox.Checked;
+			set => Overlay.ShowThumbnailOverlaysCheckBox.Checked = value;
 		}
 
 		public bool ShowThumbnailFrames
 		{
-			get => this.ShowThumbnailFramesCheckBox.Checked;
-			set => this.ShowThumbnailFramesCheckBox.Checked = value;
+			get => Overlay.ShowThumbnailFramesCheckBox.Checked;
+			set => Overlay.ShowThumbnailFramesCheckBox.Checked = value;
 		}
 
 		public bool EnableActiveClientHighlight
 		{
-			get => this.EnableActiveClientHighlightCheckBox.Checked;
-			set => this.EnableActiveClientHighlightCheckBox.Checked = value;
+			get => Overlay.EnableActiveClientHighlightCheckBox.Checked;
+            set => Overlay.EnableActiveClientHighlightCheckBox.Checked = value;
 		}
 
 		public Color ActiveClientHighlightColor
@@ -173,7 +173,7 @@ namespace EveOPreview.View
 			set
 			{
 				this._activeClientHighlightColor = value;
-				this.ActiveClientHighlightColorButton.BackColor = value;
+                Overlay.ActiveClientHighlightColorButton.BackColor = value;
 			}
 		}
 		private Color _activeClientHighlightColor;
@@ -203,7 +203,7 @@ namespace EveOPreview.View
 
 		public void SetVersionInfo(string version)
 		{
-			this.VersionLabel.Text = version;
+			this.About.VersionLabel.Text = version;
 		}
 
 		public void SetDocumentationUrl(string url)
@@ -238,8 +238,8 @@ namespace EveOPreview.View
 		public void RefreshZoomSettings()
 		{
 			bool enableControls = this.EnableThumbnailZoom;
-			this.ThumbnailZoomFactorNumericEdit.Enabled = enableControls;
-			this.ZoomAnchorPanel.Enabled = enableControls;
+            Zoom.ThumbnailZoomFactorNumericEdit.Enabled = enableControls;
+            Zoom.ZoomAnchorPanel.Enabled = enableControls;
 		}
 
 		public Action ApplicationExitRequested { get; set; }
@@ -311,7 +311,7 @@ namespace EveOPreview.View
 			this.ThumbnailsSizeChanged?.Invoke();
 		}
 
-		private void ActiveClientHighlightColorButton_Click(object sender, EventArgs e)
+		public void ActiveClientHighlightColorButton_Click(object sender, EventArgs e)
 		{
 			using (ColorDialog dialog = new ColorDialog())
 			{
@@ -380,18 +380,23 @@ namespace EveOPreview.View
 
 		private void InitZoomAnchorMap()
 		{
-			this._zoomAnchorMap[ViewZoomAnchor.NW] = this.ZoomAanchorNWRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.N] = this.ZoomAanchorNRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.NE] = this.ZoomAanchorNERadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.W] = this.ZoomAanchorWRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.C] = this.ZoomAanchorCRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.E] = this.ZoomAanchorERadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.SW] = this.ZoomAanchorSWRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.S] = this.ZoomAanchorSRadioButton;
-			this._zoomAnchorMap[ViewZoomAnchor.SE] = this.ZoomAanchorSERadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.NW] = Zoom.ZoomAanchorNWRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.N] = Zoom.ZoomAanchorNRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.NE] = Zoom.ZoomAanchorNERadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.W] = Zoom.ZoomAanchorWRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.C] = Zoom.ZoomAanchorCRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.E] = Zoom.ZoomAanchorERadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.SW] = Zoom.ZoomAanchorSWRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.S] = Zoom.ZoomAanchorSRadioButton;
+			this._zoomAnchorMap[ViewZoomAnchor.SE] = Zoom.ZoomAanchorSERadioButton;
 		}
 
 		private GeneralTab General;
 		private ThumbnailTab Thumbnail;
+		private ZoomTab Zoom;
+		private LocalWatcherTab LocalWatcher;
+		private OverlayTab Overlay;
+		private AboutTab About;
+		public List<PageAndPanel> Pages = new List<PageAndPanel>();
 	}
 }
